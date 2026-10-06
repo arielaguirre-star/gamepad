@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xbox 360 Controller - Robot Sumo micro:bit / Arduino</title>
+
+    <!-- Web App Manifest & Mobile PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#090a0c">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Xbox BLE">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/588/588258.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -200,7 +210,6 @@
                 <div class="col-span-4 flex flex-col items-center justify-center relative">
                     <div id="joystick-area" class="thumbstick-base relative w-32 h-32 md:w-44 md:h-44 rounded-full p-2 flex items-center justify-center border border-slate-800/90">
                         <div id="joystick-cap" class="thumbstick-cap relative w-22 h-22 md:w-28 md:h-28 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing transform transition-transform duration-75">
-                            <!-- Texture grip ring -->
                             <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-dashed border-slate-600/50 flex items-center justify-center">
                                 <div class="w-4 h-4 rounded-full bg-slate-800/90"></div>
                             </div>
@@ -211,25 +220,19 @@
 
                 <!-- CENTER SECTION: Guide Button, Back/Start & Telemetry Display -->
                 <div class="col-span-4 flex flex-col items-center justify-between h-full py-2">
-                    
-                    <!-- Back, Xbox Guide & Start Row -->
                     <div class="flex items-center justify-center gap-4 md:gap-6 mt-1">
-                        <!-- Back Button -->
                         <div class="flex flex-col items-center">
                             <span class="text-[9px] font-bold text-slate-400 mb-1">BACK</span>
                             <button id="btn-back" class="w-9 h-6 rounded-full bg-slate-800 border border-slate-600/60 shadow-inner active:scale-95 text-[10px] text-slate-300 flex items-center justify-center">◄◄</button>
                         </div>
 
-                        <!-- Main Xbox Guide Button (BLE Connect/Disconnect) -->
                         <button id="btn-guide" title="Conectar / Desconectar BLE" class="guide-btn relative w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 group">
-                            <!-- LED Ring Quadrants -->
                             <div class="absolute inset-1 rounded-full overflow-hidden p-1 grid grid-cols-2 grid-rows-2 gap-1 pointer-events-none">
                                 <div id="ring-q1" class="ring-quadrant rounded-tl-full"></div>
                                 <div id="ring-q2" class="ring-quadrant rounded-tr-full"></div>
                                 <div id="ring-q3" class="ring-quadrant rounded-bl-full"></div>
                                 <div id="ring-q4" class="ring-quadrant rounded-br-full"></div>
                             </div>
-                            <!-- Silver Metallic Cross Logo -->
                             <div class="relative w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-b from-slate-200 via-slate-400 to-slate-700 p-0.5 shadow-md flex items-center justify-center z-10">
                                 <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center">
                                     <i class="fa-brands fa-xbox text-2xl md:text-3xl text-slate-200 group-hover:text-emerald-400 transition-colors"></i>
@@ -237,14 +240,12 @@
                             </div>
                         </button>
 
-                        <!-- Start Button -->
                         <div class="flex flex-col items-center">
                             <span class="text-[9px] font-bold text-slate-400 mb-1">START</span>
                             <button id="btn-start" class="w-9 h-6 rounded-full bg-slate-800 border border-slate-600/60 shadow-inner active:scale-95 text-[10px] text-slate-300 flex items-center justify-center">►►</button>
                         </div>
                     </div>
 
-                    <!-- OLED Screen Telemetry Terminal Display -->
                     <div id="terminal-container" class="w-full bg-slate-950/95 border border-slate-800/90 rounded-lg p-2.5 shadow-2xl terminal-font text-xs flex flex-col justify-between my-2 transition-all duration-300">
                         <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-1 mb-1">
                             <span>MODO: <strong id="current-mode-label" class="text-emerald-400">micro:bit (ar1)</strong></span>
@@ -255,7 +256,6 @@
                             <div>> Presione botón XBOX para conectar.</div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- RIGHT SECTION: Action Buttons -->
@@ -298,7 +298,7 @@
         </div>
     </main>
 
-    <!-- TROUBLESHOOTING / SAD FACE & PIN HELP MODAL -->
+    <!-- TROUBLESHOOTING MODAL -->
     <div id="troubleshoot-modal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-3 md:p-6 transition-all duration-300">
         <div class="w-full max-w-3xl bg-slate-900/98 border-2 border-rose-500/70 rounded-2xl p-4 md:p-6 shadow-2xl flex flex-col gap-4 text-slate-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -317,136 +317,17 @@
             </div>
 
             <div class="space-y-4 text-xs">
-                
-                <!-- Sección Específica Android -->
                 <div class="bg-cyan-950/40 p-4 rounded-xl border border-cyan-500/50 flex flex-col gap-2">
                     <div class="flex items-center gap-2 text-cyan-300 font-bold font-['Orbitron'] text-xs">
                         <i class="fa-brands fa-android text-lg text-emerald-400"></i>
                         PASOS OBLIGATORIOS PARA CONECTAR DESDE ANDROID
                     </div>
                     <ul class="list-disc list-inside text-slate-200 space-y-1.5 leading-relaxed text-[11px] pl-1">
-                        <li><strong class="text-amber-300">1. Activa la Ubicación (GPS):</strong> Android exige GPS activado en el sistema para que Chrome pueda realizar búsquedas de dispositivos Bluetooth Low Energy. Si el GPS está apagado, la lista de dispositivos aparecerá en blanco.</li>
-                        <li><strong class="text-amber-300">2. Cambia el Filtro de Nombre:</strong> Por defecto el mando busca dispositivos llamados <code class="text-cyan-300">ar1</code>. Abre la configuración (botón XBOX) y selecciona el perfil <strong class="text-emerald-400">"Dispositivo Genérico BLE (Sin Filtro)"</strong> para ver la micro:bit con su nombre original (<code class="text-slate-300">BBC micro:bit [...]</code>).</li>
-                        <li><strong class="text-amber-300">3. Revisa los Permisos de Chrome:</strong> Ve en tu celular a <code class="text-slate-300">Ajustes -&gt; Aplicaciones -&gt; Chrome -&gt; Permisos</code> y activa <strong>Ubicación</strong> y <strong>Dispositivos Cercanos</strong>.</li>
-                        <li><strong class="text-amber-300">4. Desvincula la micro:bit del Bluetooth del Celular:</strong> Si la emparejaste en los Ajustes de Bluetooth de Android, dale a <strong>Olvidar Dispositivo</strong>. Web Bluetooth requiere conectarse directamente desde la web y no desde los Ajustes del teléfono.</li>
+                        <li><strong class="text-amber-300">1. Activa la Ubicación (GPS):</strong> Android exige GPS activado en el sistema para que Chrome pueda realizar búsquedas BLE.</li>
+                        <li><strong class="text-amber-300">2. Cambia el Filtro de Nombre:</strong> Selecciona el perfil "Dispositivo Genérico BLE" si tu micro:bit no se llama `ar1`.</li>
+                        <li><strong class="text-amber-300">3. Revisa los Permisos de Chrome:</strong> Otorga permisos de Ubicación y Dispositivos Cercanos en los Ajustes del celular.</li>
                     </ul>
                 </div>
-
-                <!-- Explicación del problema del PIN -->
-                <div class="bg-rose-950/40 p-4 rounded-xl border border-rose-500/50 flex flex-col gap-2">
-                    <div class="flex items-center gap-2 text-rose-300 font-bold font-['Orbitron'] text-xs">
-                        <i class="fa-solid fa-circle-exclamation text-base"></i>
-                        ¿POR QUÉ SUCEDE ESTO?
-                    </div>
-                    <p class="text-slate-200 leading-relaxed text-[11px]">
-                        Los navegadores web (Web Bluetooth API) <strong>NO pueden autenticar la clave PIN encriptada</strong> requerida por defecto por micro:bit. Al conectar con PIN, el micro:bit espera una confirmación de seguridad que el navegador no puede enviar. Tras 5 a 10 segundos, el micro:bit aborta la conexión por timeout y sufre un desbordamiento de memoria RAM intentando guardar la clave fallida, mostrando la <strong>carita triste</strong> y reiniciándose.
-                    </p>
-                </div>
-
-                <!-- Solución 1: Desactivar Passkey (Recomendado) -->
-                <div class="bg-slate-950/80 p-4 rounded-xl border border-emerald-500/40 flex flex-col gap-2">
-                    <h4 class="font-bold text-emerald-400 font-['Orbitron'] text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-[10px]">1</span>
-                        SOLUCIÓN DEFINITIVA: Desactivar la clave PIN ("No Passkey Needed")
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed">
-                        Para solucionar esto de inmediato, debes configurar el proyecto de MakeCode para que no pida PIN ni emparejamiento previo:
-                    </p>
-                    <ol class="list-decimal list-inside text-slate-300 space-y-1.5 pl-1 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                        <li>Abre tu proyecto en <a href="https://makecode.microbit.org" target="_blank" class="text-cyan-400 underline font-bold">makecode.microbit.org</a>.</li>
-                        <li>Haz clic en el engranaje ⚙️ (<strong>Configuración</strong>) en la esquina superior derecha.</li>
-                        <li>Selecciona <strong class="text-emerald-400">Project Settings</strong> (Configuración del Proyecto).</li>
-                        <li>Busca la opción de seguridad y selecciona: <strong class="text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/40">"No Passkey Needed: Anyone can connect via Bluetooth"</strong>.</li>
-                        <li>Vuelve a cargar el archivo <code class="text-cyan-300">.hex</code> en tu micro:bit.</li>
-                    </ol>
-                </div>
-
-                <!-- Solución 2: Emparejar previamente en el SO -->
-                <div class="bg-slate-950/80 p-4 rounded-xl border border-amber-500/40 flex flex-col gap-2">
-                    <h4 class="font-bold text-amber-400 font-['Orbitron'] text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/50 flex items-center justify-center text-[10px]">2</span>
-                        ALTERNATIVA (Si deseas mantener el PIN)
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed">
-                        Si obligatoriamente necesitas usar un PIN, debes emparejar el micro:bit <strong>a nivel del Sistema Operativo</strong> ANTES de abrir la aplicación web:
-                    </p>
-                    <ul class="list-disc list-inside text-slate-400 space-y-1 pl-1">
-                        <li>Abre la configuración de Bluetooth de tu PC (Windows/Mac) o Smartphone.</li>
-                        <li>Empareja el micro:bit e ingresa el PIN de patrones ahí.</li>
-                        <li>Una vez enlazado por el sistema operativo, abre esta web e inicia la conexión normalmente.</li>
-                    </ul>
-                </div>
-
-                <!-- Tabs de Código Listo para Copiar -->
-                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-cyan-500/30 flex flex-col gap-2">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-cyan-400 font-['Orbitron'] text-xs flex items-center gap-2">
-                            <i class="fa-solid fa-code text-emerald-400"></i> Código Ultra-estable sin PIN (MakeCode)
-                        </h4>
-                        <div class="flex gap-1 text-[10px]">
-                            <button id="tab-btn-ts" class="px-2.5 py-1 rounded bg-cyan-700 text-white font-mono font-bold">JavaScript</button>
-                            <button id="tab-btn-py" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-mono font-bold hover:text-white">Python</button>
-                        </div>
-                    </div>
-
-                    <!-- Javascript Code Box -->
-                    <div id="code-box-ts" class="relative group">
-                        <button id="btn-copy-ts" class="absolute right-2 top-2 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-mono border border-slate-700 flex items-center gap-1 transition-all">
-                            <i class="fa-solid fa-copy text-cyan-400"></i> Copiar Código
-                        </button>
-                        <pre class="bg-slate-900 p-3 rounded-lg font-mono text-[11px] text-cyan-300 overflow-x-auto border border-slate-800 leading-relaxed max-h-48">
-bluetooth.startUartService()
-
-bluetooth.onBluetoothConnected(function () {
-    basic.showIcon(IconNames.Yes)
-})
-
-bluetooth.onBluetoothDisconnected(function () {
-    basic.showIcon(IconNames.No)
-})
-
-bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () {
-    let cmd = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
-    if (cmd == "F") {
-        // Mover Robot Adelante
-    } else if (cmd == "B") {
-        // Mover Robot Atrás
-    } else if (cmd == "L") {
-        // Giro Izquierda
-    } else if (cmd == "R") {
-        // Giro Derecha
-    } else if (cmd == "S") {
-        // Detener Motores
-    }
-})</pre>
-                    </div>
-
-                    <!-- Python Code Box -->
-                    <div id="code-box-py" class="relative group hidden">
-                        <button id="btn-copy-py" class="absolute right-2 top-2 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-mono border border-slate-700 flex items-center gap-1 transition-all">
-                            <i class="fa-solid fa-copy text-amber-400"></i> Copiar Código
-                        </button>
-                        <pre class="bg-slate-900 p-3 rounded-lg font-mono text-[11px] text-amber-300 overflow-x-auto border border-slate-800 leading-relaxed max-h-48">
-def on_connected():
-    basic.show_icon(IconNames.YES)
-bluetooth.on_bluetooth_connected(on_connected)
-
-def on_disconnected():
-    basic.show_icon(IconNames.NO)
-bluetooth.on_bluetooth_disconnected(on_disconnected)
-
-def on_uart_data():
-    cmd = bluetooth.uart_read_until(serial.delimiters(Delimiters.NEW_LINE))
-    if cmd == "F":
-        pass # Avanzar
-    elif cmd == "S":
-        pass # Detener
-bluetooth.on_uart_data_received(serial.delimiters(Delimiters.NEW_LINE), on_uart_data)
-
-bluetooth.start_uart_service()</pre>
-                    </div>
-                </div>
-
             </div>
 
             <div class="flex justify-end pt-2 border-t border-slate-800">
@@ -457,7 +338,7 @@ bluetooth.start_uart_service()</pre>
         </div>
     </div>
 
-    <!-- CONFIGURATION MODAL (XBOX GUIDE OVERLAY) -->
+    <!-- CONFIGURATION MODAL -->
     <div id="config-modal" class="fixed inset-0 z-50 bg-slate-950/92 backdrop-blur-md hidden flex-col items-center justify-center p-3 md:p-6 transition-all duration-300">
         <div class="w-full max-w-2xl bg-slate-900/95 border-2 border-emerald-500/40 rounded-2xl p-4 md:p-6 shadow-2xl flex flex-col gap-4 text-slate-200 max-h-[90vh] overflow-hidden">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -475,7 +356,6 @@ bluetooth.start_uart_service()</pre>
                 </button>
             </div>
 
-            <!-- PERFIL DE HARDWARE Y ADVERTENCIA HC-06 -->
             <div class="bg-amber-950/30 border border-amber-500/40 p-3 rounded-xl flex flex-col gap-2">
                 <div class="flex items-center justify-between">
                     <label class="text-xs font-bold text-amber-300 font-['Orbitron'] flex items-center gap-2">
@@ -487,10 +367,6 @@ bluetooth.start_uart_service()</pre>
                         <option value="generic">Cualquier Dispositivo BLE (Sin Filtro)</option>
                     </select>
                 </div>
-                <p class="text-[11px] text-amber-200/80 leading-snug">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>
-                    <strong>Nota importante sobre el PIN:</strong> Recuerda usar la opción <strong>"No Passkey Needed"</strong> en MakeCode para evitar desconexiones por timeout.
-                </p>
             </div>
 
             <div class="flex justify-between items-center bg-slate-950/80 p-3 rounded-xl border border-slate-800">
@@ -544,49 +420,6 @@ bluetooth.start_uart_service()</pre>
                         <input type="text" id="cfg-joy-r" class="w-28 bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-center font-mono text-cyan-300 uppercase focus:outline-none focus:border-emerald-500">
                     </div>
                 </div>
-
-                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80 flex flex-col gap-2 md:col-span-2">
-                    <h4 class="font-bold text-purple-400 font-['Orbitron'] text-[11px] uppercase tracking-wider mb-1">Botones Secundarios</h4>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="flex items-center justify-between gap-2">
-                            <label class="text-slate-300">Botón BACK:</label>
-                            <input type="text" id="cfg-btn-back" class="w-28 bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-center font-mono text-cyan-300 uppercase focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <label class="text-slate-300">Botón START:</label>
-                            <input type="text" id="cfg-btn-start" class="w-28 bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-center font-mono text-cyan-300 uppercase focus:outline-none focus:border-emerald-500">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Configuración Botón LED -->
-                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80 flex flex-col gap-2 md:col-span-2">
-                    <h4 class="font-bold text-yellow-400 font-['Orbitron'] text-[11px] uppercase tracking-wider mb-1">Configuración LED Externo (Pin)</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div class="flex items-center justify-between gap-2">
-                            <label class="text-slate-300">Comando LED ON:</label>
-                            <input type="text" id="cfg-led-on" class="w-28 bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-center font-mono text-yellow-300 uppercase focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <label class="text-slate-300">Comando LED OFF:</label>
-                            <input type="text" id="cfg-led-off" class="w-28 bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-center font-mono text-yellow-300 uppercase focus:outline-none focus:border-emerald-500">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Configuración Avanzada de Switches -->
-                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-800/80 flex flex-col gap-2 md:col-span-2">
-                    <div class="flex justify-between items-center mb-1">
-                        <h4 class="font-bold text-amber-400 font-['Orbitron'] text-[11px] uppercase tracking-wider">Configuración de Switches</h4>
-                        <div class="flex items-center gap-2 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
-                            <span class="text-[10px] text-slate-400">Cantidad:</span>
-                            <button type="button" id="cfg-btn-dec-sw" class="w-5 h-5 rounded bg-slate-800 text-amber-400 font-bold hover:bg-slate-700 active:scale-95 flex items-center justify-center">-</button>
-                            <span id="cfg-sw-count" class="font-mono text-amber-300 px-1 font-bold">2</span>
-                            <button type="button" id="cfg-btn-inc-sw" class="w-5 h-5 rounded bg-slate-800 text-amber-400 font-bold hover:bg-slate-700 active:scale-95 flex items-center justify-center">+</button>
-                        </div>
-                    </div>
-                    <div id="cfg-switches-inputs-container" class="flex flex-col gap-2 mt-1"></div>
-                </div>
             </div>
 
             <div class="flex justify-between items-center pt-2 border-t border-slate-800">
@@ -602,7 +435,7 @@ bluetooth.start_uart_service()</pre>
         </div>
     </div>
 
-    <!-- EXPANDED TERMINAL MODAL -->
+    <!-- TERMINAL MODAL -->
     <div id="terminal-modal" class="fixed inset-0 z-50 bg-slate-950/92 backdrop-blur-md hidden flex-col items-center justify-center p-3 md:p-6 transition-all duration-300">
         <div class="w-full max-w-3xl bg-slate-900/98 border-2 border-cyan-500/40 rounded-2xl p-4 md:p-6 shadow-2xl flex flex-col gap-4 text-slate-200 max-h-[90vh] h-[550px] overflow-hidden">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -621,137 +454,26 @@ bluetooth.start_uart_service()</pre>
             </div>
 
             <div id="expanded-terminal-log" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-400 overflow-y-auto flex flex-col justify-start gap-1 shadow-inner leading-relaxed">
-                <div class="text-slate-500">[SISTEMA] Consola interactiva inicializada. Escriba una instrucción abajo.</div>
-            </div>
-
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider whitespace-nowrap">Accesos Rápidos:</span>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs border border-slate-700">F</button>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs border border-slate-700">B</button>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs border border-slate-700">L</button>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs border border-slate-700">R</button>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs border border-slate-700">S</button>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-mono text-xs border border-slate-700">PING</button>
-                <button class="quick-cmd-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-rose-300 font-mono text-xs border border-slate-700">RESET</button>
+                <div class="text-slate-500">[SISTEMA] Consola interactiva inicializada.</div>
             </div>
 
             <div class="flex gap-2">
-                <div class="relative flex-1">
-                    <span class="absolute left-3 top-2.5 text-slate-500 font-mono">&gt;</span>
-                    <input type="text" id="terminal-input" placeholder="Escriba instrucción (ej: LED_ON, F, SPEED=100)..." class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-xl pl-8 pr-4 py-2.5 font-mono text-sm text-cyan-300 focus:outline-none transition-colors">
-                </div>
-                <button id="btn-send-terminal" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition-all shadow-lg shadow-cyan-950">
+                <input type="text" id="terminal-input" placeholder="Escriba instrucción (ej: F, S, LED_ON)..." class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-xl pl-4 pr-4 py-2.5 font-mono text-sm text-cyan-300 focus:outline-none transition-colors">
+                <button id="btn-send-terminal" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition-all">
                     <i class="fa-solid fa-paper-plane"></i> ENVIAR
                 </button>
-                <button id="btn-clear-terminal" class="px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 rounded-xl text-xs transition-colors" title="Limpiar Consola">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
             </div>
-        </div>
-    </div>
-
-    <!-- LED CONTROL MODAL -->
-    <div id="led-modal" class="fixed inset-0 z-50 bg-slate-950/92 backdrop-blur-md hidden flex-col items-center justify-center p-3 md:p-6 transition-all duration-300">
-        <div class="w-full max-w-md bg-slate-900/98 border-2 border-emerald-500/40 rounded-2xl p-4 md:p-6 shadow-2xl flex flex-col gap-4 text-slate-200 overflow-hidden">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center">
-                        <i class="fa-solid fa-lightbulb text-yellow-400 text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-black tracking-wide font-['Orbitron'] text-white">CONTROL LED EXTERNO</h3>
-                        <p class="text-xs text-slate-400">Encendido y apagado para LED conectado a pin de micro:bit/Arduino</p>
-                    </div>
-                </div>
-                <button id="btn-close-led-modal" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="bg-slate-950/80 p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center gap-4 relative overflow-hidden shadow-inner my-2">
-                <div class="text-center">
-                    <h4 class="font-bold text-xs md:text-sm text-white font-['Orbitron'] tracking-wider">CONMUTAR LED EXTERNO</h4>
-                    <p class="text-[11px] text-slate-400 mt-1">Haz clic para enviar <span class="text-amber-400 font-mono">LED_ON</span> / <span class="text-slate-400 font-mono">LED_OFF</span></p>
-                </div>
-
-                <button id="btn-modal-led-toggle" type="button" class="group relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 border-4 border-slate-700/80 shadow-2xl flex flex-col items-center justify-center transition-all duration-200 active:scale-90 hover:border-amber-500/60 focus:outline-none">
-                    <div id="modal-led-glow" class="absolute -inset-1 rounded-full opacity-0 transition-opacity duration-300 blur-md bg-amber-400/60 pointer-events-none"></div>
-                    <div class="relative w-full h-full rounded-full flex flex-col items-center justify-center z-10 bg-slate-900/90 group-hover:bg-slate-800/90 transition-colors border border-slate-700/60">
-                        <i id="modal-led-icon" class="fa-solid fa-power-off text-4xl text-slate-500 transition-all duration-300"></i>
-                        <span id="modal-led-state-text" class="text-xs font-black font-['Orbitron'] text-slate-400 mt-2 uppercase tracking-widest">OFF</span>
-                    </div>
-                </button>
-
-                <div class="flex items-center gap-2 mt-1">
-                    <span id="led-power-indicator-dot" class="w-2.5 h-2.5 rounded-full bg-slate-600 transition-all"></span>
-                    <span id="led-power-indicator-text" class="text-xs font-mono text-slate-400">ESTADO: APAGADO</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONFIGURABLE SWITCHES MODAL -->
-    <div id="switch-modal" class="fixed inset-0 z-50 bg-slate-950/92 backdrop-blur-md hidden flex-col items-center justify-center p-3 md:p-6 transition-all duration-300">
-        <div class="w-full max-w-2xl bg-slate-900/98 border-2 border-amber-500/40 rounded-2xl p-4 md:p-6 shadow-2xl flex flex-col gap-4 text-slate-200 max-h-[90vh] overflow-hidden">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/50 flex items-center justify-center">
-                        <i class="fa-solid fa-toggle-on text-amber-400 text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-black tracking-wide font-['Orbitron'] text-white">PANEL DE SWITCHES CONFIGURABLES</h3>
-                        <p class="text-xs text-slate-400">Configura la cantidad de interruptores y conmuta estados UART</p>
-                    </div>
-                </div>
-                <button id="btn-close-switch-modal" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
-                <div>
-                    <h4 class="font-bold text-xs text-amber-400 font-['Orbitron'] uppercase tracking-wider">Cantidad de Switches</h4>
-                    <p class="text-[11px] text-slate-400">Define cuántos interruptores deseas utilizar (1 a 8)</p>
-                </div>
-                <div class="flex items-center gap-3 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
-                    <button id="btn-decrease-switches" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-amber-400 font-black text-base flex items-center justify-center transition-all">-</button>
-                    <span id="switch-count-display" class="font-mono text-base font-bold text-white px-2">2</span>
-                    <button id="btn-increase-switches" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-amber-400 font-black text-base flex items-center justify-center transition-all">+</button>
-                </div>
-            </div>
-
-            <div id="switches-list-container" class="overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 pr-1 py-1"></div>
         </div>
     </div>
 
     <script>
-        /* Bluetooth UUID Profiles */
         const BLE_PROFILES = {
-            microbit: {
-                name: 'micro:bit (ar1)',
-                serviceUUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e',
-                txUUID: '6e400002-b5a3-f393-e0a9-e50e24dcca9e',
-                filterType: 'namePrefix',
-                filterValue: 'ar1'
-            },
-            hm10: {
-                name: 'Arduino (HM-10 / HC-08)',
-                serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb',
-                txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb',
-                filterType: 'service',
-                filterValue: '0000ffe0-0000-1000-8000-00805f9b34fb'
-            },
-            generic: {
-                name: 'Dispositivo Genérico BLE',
-                serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb',
-                txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb',
-                filterType: 'acceptAll',
-                filterValue: null
-            }
+            microbit: { name: 'micro:bit (ar1)', serviceUUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', txUUID: '6e400002-b5a3-f393-e0a9-e50e24dcca9e', filterType: 'namePrefix', filterValue: 'ar1' },
+            hm10: { name: 'Arduino (HM-10)', serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb', txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb', filterType: 'service', filterValue: '0000ffe0-0000-1000-8000-00805f9b34fb' },
+            generic: { name: 'Dispositivo Genérico BLE', serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb', txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb', filterType: 'acceptAll', filterValue: null }
         };
 
         let selectedProfileKey = 'microbit';
-
         let bleDevice = null;
         let gattServer = null;
         let uartService = null;
@@ -759,42 +481,11 @@ bluetooth.start_uart_service()</pre>
         let isConnected = false;
         let lastCommand = '';
         let lastSendTime = 0;
-        const MIN_TX_INTERVAL_MS = 35; // Rate Limiter para no saturar memoria RAM del micro:bit
+        const MIN_TX_INTERVAL_MS = 35;
 
-        /* Special Button States */
-        let isSwitchOn = false;
-        let isLedOn = false;
-
-        /* LED Commands Config */
-        let ledCommands = {
-            cmdOn: 'LED_ON',
-            cmdOff: 'LED_OFF'
-        };
-
-        /* Configurable Multi-Switch System Logic */
-        let switchesList = [
-            { id: 1, label: 'Switch Principal', state: false, cmdOn: 'SW1_ON', cmdOff: 'SW1_OFF' },
-            { id: 2, label: 'Switch Auxiliar', state: false, cmdOn: 'SW2_ON', cmdOff: 'SW2_OFF' }
-        ];
-
-        /* Default Commands Mapping */
-        const DEFAULT_COMMANDS = {
-            btnA: 'A',
-            btnB: 'B_BTN',
-            btnX: 'X',
-            btnY: 'Y',
-            btnBack: 'BACK',
-            btnStart: 'START',
-            joyF: 'F',
-            joyB: 'B',
-            joyL: 'L',
-            joyR: 'R',
-            joyS: 'S'
-        };
-
+        const DEFAULT_COMMANDS = { btnA: 'A', btnB: 'B_BTN', btnX: 'X', btnY: 'Y', btnBack: 'BACK', btnStart: 'START', joyF: 'F', joyB: 'B', joyL: 'L', joyR: 'R', joyS: 'S' };
         let customCommands = { ...DEFAULT_COMMANDS };
 
-        /* UI References */
         const portraitWarning = document.getElementById('portrait-warning');
         const btnEnableFullscreen = document.getElementById('btn-enable-fullscreen');
         const btnFullscreen = document.getElementById('btn-fullscreen');
@@ -802,797 +493,109 @@ bluetooth.start_uart_service()</pre>
         const btnGuide = document.getElementById('btn-guide');
         const statusDot = document.getElementById('status-dot');
         const statusText = document.getElementById('status-text');
-        const terminalContainer = document.getElementById('terminal-container');
         const terminalLog = document.getElementById('terminal-log');
         const telemetryCmd = document.getElementById('telemetry-cmd');
-        const currentModeLabel = document.getElementById('current-mode-label');
 
-        /* Troubleshooting Modal References */
-        const btnFixHelp = document.getElementById('btn-fix-help');
         const troubleshootModal = document.getElementById('troubleshoot-modal');
+        const btnFixHelp = document.getElementById('btn-fix-help');
         const btnCloseTroubleshoot = document.getElementById('btn-close-troubleshoot');
         const btnDismissTroubleshoot = document.getElementById('btn-dismiss-troubleshoot');
 
-        const tabBtnTs = document.getElementById('tab-btn-ts');
-        const tabBtnPy = document.getElementById('tab-btn-py');
-        const codeBoxTs = document.getElementById('code-box-ts');
-        const codeBoxPy = document.getElementById('code-box-py');
-        const btnCopyTs = document.getElementById('btn-copy-ts');
-        const btnCopyPy = document.getElementById('btn-copy-py');
-
-        tabBtnTs?.addEventListener('click', () => {
-            tabBtnTs.className = 'px-2.5 py-1 rounded bg-cyan-700 text-white font-mono font-bold';
-            tabBtnPy.className = 'px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-mono font-bold hover:text-white';
-            codeBoxTs?.classList.remove('hidden');
-            codeBoxPy?.classList.add('hidden');
-        });
-
-        tabBtnPy?.addEventListener('click', () => {
-            tabBtnPy.className = 'px-2.5 py-1 rounded bg-amber-600 text-white font-mono font-bold';
-            tabBtnTs.className = 'px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-mono font-bold hover:text-white';
-            codeBoxPy?.classList.remove('hidden');
-            codeBoxTs?.classList.add('hidden');
-        });
-
-        function copyToClipboard(text, btnEl) {
-            const temp = document.createElement('textarea');
-            temp.value = text;
-            document.body.appendChild(temp);
-            temp.select();
-            document.execCommand('copy');
-            document.body.removeChild(temp);
-
-            if (btnEl) {
-                const originalHTML = btnEl.innerHTML;
-                btnEl.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> ¡Copiado!';
-                setTimeout(() => {
-                    btnEl.innerHTML = originalHTML;
-                }, 1800);
-            }
-        }
-
-        btnCopyTs?.addEventListener('click', () => {
-            const code = `bluetooth.startUartService()
-
-bluetooth.onBluetoothConnected(function () {
-    basic.showIcon(IconNames.Yes)
-})
-
-bluetooth.onBluetoothDisconnected(function () {
-    basic.showIcon(IconNames.No)
-})
-
-bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () {
-    let cmd = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
-    if (cmd == "F") {
-        // Mover Robot Adelante
-    } else if (cmd == "B") {
-        // Mover Robot Atrás
-    } else if (cmd == "L") {
-        // Giro Izquierda
-    } else if (cmd == "R") {
-        // Giro Derecha
-    } else if (cmd == "S") {
-        // Detener Motores
-    }
-})`;
-            copyToClipboard(code, btnCopyTs);
-        });
-
-        btnCopyPy?.addEventListener('click', () => {
-            const code = `def on_connected():
-    basic.show_icon(IconNames.YES)
-bluetooth.on_bluetooth_connected(on_connected)
-
-def on_disconnected():
-    basic.show_icon(IconNames.NO)
-bluetooth.on_bluetooth_disconnected(on_disconnected)
-
-def on_uart_data():
-    cmd = bluetooth.uart_read_until(serial.delimiters(Delimiters.NEW_LINE))
-    if cmd == "F":
-        pass # Avanzar
-    elif cmd == "S":
-        pass # Detener
-bluetooth.on_uart_data_received(serial.delimiters(Delimiters.NEW_LINE), on_uart_data)
-
-bluetooth.start_uart_service()`;
-            copyToClipboard(code, btnCopyPy);
-        });
-
-        btnFixHelp?.addEventListener('click', () => {
-            troubleshootModal?.classList.remove('hidden');
-            troubleshootModal?.classList.add('flex');
-        });
-
-        btnCloseTroubleshoot?.addEventListener('click', () => {
-            troubleshootModal?.classList.remove('flex');
-            troubleshootModal?.classList.add('hidden');
-        });
-
-        btnDismissTroubleshoot?.addEventListener('click', () => {
-            troubleshootModal?.classList.remove('flex');
-            troubleshootModal?.classList.add('hidden');
-        });
+        btnFixHelp?.addEventListener('click', () => troubleshootModal?.classList.remove('hidden'));
+        btnCloseTroubleshoot?.addEventListener('click', () => troubleshootModal?.classList.add('hidden'));
+        btnDismissTroubleshoot?.addEventListener('click', () => troubleshootModal?.classList.add('hidden'));
 
         function requestFullscreen() {
             const el = document.documentElement;
-            if (el.requestFullscreen) {
-                el.requestFullscreen().catch(() => {});
-            } else if (el.webkitRequestFullscreen) {
-                el.webkitRequestFullscreen();
-            } else if (el.mozRequestFullScreen) {
-                el.mozRequestFullScreen();
-            } else if (el.msRequestFullscreen) {
-                el.msRequestFullscreen();
-            }
+            if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
         }
 
-        function exitFullscreen() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen().catch(() => {});
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            }
-        }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
-                requestFullscreen();
-            } else {
-                exitFullscreen();
-            }
-        }
-
-        document.addEventListener('fullscreenchange', updateFullscreenIcon);
-        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-
-        function updateFullscreenIcon() {
-            const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
-            if (fullscreenIcon) {
-                fullscreenIcon.className = isFS ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
-            }
-        }
-
-        btnFullscreen?.addEventListener('click', toggleFullscreen);
-        btnEnableFullscreen?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            requestFullscreen();
-        });
-        portraitWarning?.addEventListener('click', () => {
-            requestFullscreen();
-        });
-
-        /* Footer Special Buttons */
-        const btnCmdTerminal = document.getElementById('btn-cmd-terminal');
-        const btnCmdSwitch = document.getElementById('btn-cmd-switch');
-        const switchIcon = document.getElementById('switch-icon');
-        const switchBadge = document.getElementById('switch-badge');
-        const btnCmdLed = document.getElementById('btn-cmd-led');
-        const ledIcon = document.getElementById('led-icon');
-        const ledBadge = document.getElementById('led-badge');
-
-        /* Modal Elements */
-        const configModal = document.getElementById('config-modal');
-        const btnCloseModal = document.getElementById('btn-close-modal');
-        const modalBtnConnect = document.getElementById('modal-btn-connect');
-        const modalConnectLabel = document.getElementById('modal-connect-label');
-        const modalStatusDot = document.getElementById('modal-status-dot');
-        const modalStatusText = document.getElementById('modal-status-text');
-        const btnSaveConfig = document.getElementById('btn-save-config');
-        const btnResetDefaults = document.getElementById('btn-reset-defaults');
-        const bleProfileSelect = document.getElementById('ble-profile-select');
-
-        function openConfigModal() {
-            populateConfigForm();
-            configModal.classList.remove('hidden');
-            configModal.classList.add('flex');
-        }
-
-        function closeConfigModal() {
-            configModal.classList.remove('flex');
-            configModal.classList.add('hidden');
-        }
-
-        /* Modals UI References */
-        const terminalModal = document.getElementById('terminal-modal');
-        const btnCloseTerminalModal = document.getElementById('btn-close-terminal-modal');
-        const expandedTerminalLog = document.getElementById('expanded-terminal-log');
-        const terminalInput = document.getElementById('terminal-input');
-        const btnSendTerminal = document.getElementById('btn-send-terminal');
-        const btnClearTerminal = document.getElementById('btn-clear-terminal');
-
-        const ledModal = document.getElementById('led-modal');
-        const btnCloseLedModal = document.getElementById('btn-close-led-modal');
-        const btnModalLedToggle = document.getElementById('btn-modal-led-toggle');
-        const modalLedIcon = document.getElementById('modal-led-icon');
-        const modalLedStateText = document.getElementById('modal-led-state-text');
-        const modalLedGlow = document.getElementById('modal-led-glow');
-        const ledPowerIndicatorDot = document.getElementById('led-power-indicator-dot');
-        const ledPowerIndicatorText = document.getElementById('led-power-indicator-text');
-
-        const switchModal = document.getElementById('switch-modal');
-        const btnCloseSwitchModal = document.getElementById('btn-close-switch-modal');
-        const btnDecreaseSwitches = document.getElementById('btn-decrease-switches');
-        const btnIncreaseSwitches = document.getElementById('btn-increase-switches');
-        const switchCountDisplay = document.getElementById('switch-count-display');
-        const switchesListContainer = document.getElementById('switches-list-container');
-
-        /* Terminal Modal Event Handlers */
-        btnCmdTerminal?.addEventListener('click', () => {
-            terminalModal.classList.remove('hidden');
-            terminalModal.classList.add('flex');
-            terminalInput.focus();
-        });
-
-        btnCloseTerminalModal?.addEventListener('click', () => {
-            terminalModal.classList.remove('flex');
-            terminalModal.classList.add('hidden');
-        });
-
-        function sendTerminalInputValue() {
-            const val = terminalInput.value.trim();
-            if (val) {
-                sendCommand(val);
-                terminalInput.value = '';
-            }
-        }
-
-        btnSendTerminal?.addEventListener('click', sendTerminalInputValue);
-        terminalInput?.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                sendTerminalInputValue();
-            }
-        });
-
-        btnClearTerminal?.addEventListener('click', () => {
-            expandedTerminalLog.innerHTML = '<div class="text-slate-500">[SISTEMA] Consola limpiada.</div>';
-        });
-
-        document.querySelectorAll('.quick-cmd-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const cmd = btn.innerText;
-                sendCommand(cmd);
-            });
-        });
-
-        btnCmdLed?.addEventListener('click', () => {
-            ledModal.classList.remove('hidden');
-            ledModal.classList.add('flex');
-        });
-
-        btnCloseLedModal?.addEventListener('click', () => {
-            ledModal.classList.remove('flex');
-            ledModal.classList.add('hidden');
-        });
-
-        function updateLedVisuals() {
-            if (isLedOn) {
-                if (modalLedGlow) modalLedGlow.className = 'absolute -inset-1 rounded-full opacity-100 transition-opacity duration-300 blur-md bg-amber-400/70 pointer-events-none';
-                if (modalLedIcon) modalLedIcon.className = 'fa-solid fa-power-off text-4xl text-amber-300 transition-all duration-300 filter drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]';
-                if (modalLedStateText) {
-                    modalLedStateText.innerText = 'ON';
-                    modalLedStateText.className = 'text-xs font-black font-[\'Orbitron\'] text-amber-300 mt-2 uppercase tracking-widest';
-                }
-                if (ledPowerIndicatorDot) ledPowerIndicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.9)]';
-                if (ledPowerIndicatorText) {
-                    ledPowerIndicatorText.innerText = `ESTADO: ENCENDIDO (${ledCommands.cmdOn})`;
-                    ledPowerIndicatorText.className = 'text-xs font-mono text-amber-300 font-bold';
-                }
-                if (ledIcon) ledIcon.className = 'fa-solid fa-lightbulb text-yellow-300 text-sm transition-all filter drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]';
-                if (ledBadge) {
-                    ledBadge.innerText = 'ON';
-                    ledBadge.className = 'px-1.5 py-0.5 rounded text-[8px] bg-emerald-950 text-emerald-300 font-mono border border-emerald-800/60';
-                }
-            } else {
-                if (modalLedGlow) modalLedGlow.className = 'absolute -inset-1 rounded-full opacity-0 transition-opacity duration-300 blur-md bg-amber-400/60 pointer-events-none';
-                if (modalLedIcon) modalLedIcon.className = 'fa-solid fa-power-off text-4xl text-slate-500 transition-all duration-300';
-                if (modalLedStateText) {
-                    modalLedStateText.innerText = 'OFF';
-                    modalLedStateText.className = 'text-xs font-black font-[\'Orbitron\'] text-slate-400 mt-2 uppercase tracking-widest';
-                }
-                if (ledPowerIndicatorDot) ledPowerIndicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-600 transition-all';
-                if (ledPowerIndicatorText) {
-                    ledPowerIndicatorText.innerText = `ESTADO: APAGADO (${ledCommands.cmdOff})`;
-                    ledPowerIndicatorText.className = 'text-xs font-mono text-slate-400';
-                }
-                if (ledIcon) ledIcon.className = 'fa-solid fa-lightbulb text-slate-500 text-sm transition-all';
-                if (ledBadge) {
-                    ledBadge.innerText = 'OFF';
-                    ledBadge.className = 'px-1.5 py-0.5 rounded text-[8px] bg-slate-950 text-slate-500 font-mono border border-slate-800';
-                }
-            }
-        }
-
-        btnModalLedToggle?.addEventListener('click', () => {
-            isLedOn = !isLedOn;
-            updateLedVisuals();
-            const cmd = isLedOn ? ledCommands.cmdOn : ledCommands.cmdOff;
-            sendCommand(cmd);
-        });
-
-        btnCmdSwitch?.addEventListener('click', () => {
-            renderSwitchesList();
-            switchModal.classList.remove('hidden');
-            switchModal.classList.add('flex');
-        });
-
-        btnCloseSwitchModal?.addEventListener('click', () => {
-            switchModal.classList.remove('flex');
-            switchModal.classList.add('hidden');
-        });
-
-        btnDecreaseSwitches?.addEventListener('click', () => {
-            if (switchesList.length > 1) {
-                switchesList.pop();
-                renderSwitchesList();
-            }
-        });
-
-        btnIncreaseSwitches?.addEventListener('click', () => {
-            if (switchesList.length < 8) {
-                const nextId = switchesList.length + 1;
-                switchesList.push({
-                    id: nextId,
-                    label: `Switch ${nextId}`,
-                    state: false,
-                    cmdOn: `SW${nextId}_ON`,
-                    cmdOff: `SW${nextId}_OFF`
-                });
-                renderSwitchesList();
-            }
-        });
-
-        function renderSwitchesList() {
-            if (!switchCountDisplay || !switchesListContainer) return;
-            switchCountDisplay.innerText = switchesList.length;
-            switchesListContainer.innerHTML = '';
-
-            switchesList.forEach((sw, index) => {
-                const swCard = document.createElement('div');
-                swCard.className = 'bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between transition-all hover:border-slate-700';
-
-                swCard.innerHTML = `
-                    <div class="flex flex-col gap-1">
-                        <span class="text-xs font-bold text-slate-200 font-['Orbitron']">${sw.label}</span>
-                        <span class="text-[10px] font-mono text-cyan-400">TX: ${sw.state ? sw.cmdOn : sw.cmdOff}</span>
-                    </div>
-                    <button type="button" class="sw-toggle-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                        sw.state 
-                            ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-950/60' 
-                            : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'
-                    }">
-                        <i class="fa-solid ${sw.state ? 'fa-toggle-on text-base' : 'fa-toggle-off text-base'}"></i>
-                        <span>${sw.state ? 'ON' : 'OFF'}</span>
-                    </button>
-                `;
-
-                const btnToggle = swCard.querySelector('.sw-toggle-btn');
-                btnToggle.addEventListener('click', () => {
-                    switchesList[index].state = !switchesList[index].state;
-                    const activeState = switchesList[index].state;
-                    const cmdToSend = activeState ? switchesList[index].cmdOn : switchesList[index].cmdOff;
-                    sendCommand(cmdToSend);
-                    renderSwitchesList();
-                });
-
-                switchesListContainer.appendChild(swCard);
-            });
-        }
-
-        function populateConfigForm() {
-            if (bleProfileSelect) bleProfileSelect.value = selectedProfileKey;
-
-            document.getElementById('cfg-btn-a').value = customCommands.btnA;
-            document.getElementById('cfg-btn-b').value = customCommands.btnB;
-            document.getElementById('cfg-btn-x').value = customCommands.btnX;
-            document.getElementById('cfg-btn-y').value = customCommands.btnY;
-            document.getElementById('cfg-btn-back').value = customCommands.btnBack;
-            document.getElementById('cfg-btn-start').value = customCommands.btnStart;
-            document.getElementById('cfg-joy-f').value = customCommands.joyF;
-            document.getElementById('cfg-joy-b').value = customCommands.joyB;
-            document.getElementById('cfg-joy-l').value = customCommands.joyL;
-            document.getElementById('cfg-joy-r').value = customCommands.joyR;
-
-            /* LED Config */
-            const cfgLedOn = document.getElementById('cfg-led-on');
-            const cfgLedOff = document.getElementById('cfg-led-off');
-            if (cfgLedOn) cfgLedOn.value = ledCommands.cmdOn;
-            if (cfgLedOff) cfgLedOff.value = ledCommands.cmdOff;
-
-            /* Switches Config */
-            renderSwitchesConfigInputs();
-        }
-
-        function renderSwitchesConfigInputs() {
-            const container = document.getElementById('cfg-switches-inputs-container');
-            const countDisplay = document.getElementById('cfg-sw-count');
-            if (!container) return;
-
-            if (countDisplay) countDisplay.innerText = switchesList.length;
-            container.innerHTML = '';
-
-            switchesList.forEach((sw, idx) => {
-                const row = document.createElement('div');
-                row.className = 'bg-slate-900/90 p-2.5 rounded-lg border border-slate-800/80 flex flex-col md:flex-row gap-2 items-center justify-between text-xs';
-                row.innerHTML = `
-                    <div class="flex items-center gap-2 w-full md:w-auto">
-                        <span class="w-4 h-4 rounded-full bg-amber-500/20 text-amber-400 font-mono text-[10px] flex items-center justify-center font-bold">${sw.id}</span>
-                        <input type="text" value="${sw.label}" data-idx="${idx}" class="cfg-sw-label w-full md:w-32 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:outline-none focus:border-amber-500" placeholder="Nombre">
-                    </div>
-                    <div class="flex items-center gap-2 w-full md:w-auto">
-                        <div class="flex items-center gap-1">
-                            <span class="text-[10px] text-amber-400 font-bold">ON:</span>
-                            <input type="text" value="${sw.cmdOn}" data-idx="${idx}" class="cfg-sw-cmd-on w-20 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-center font-mono text-cyan-300 uppercase focus:outline-none focus:border-amber-500" placeholder="CMD ON">
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <span class="text-[10px] text-slate-400 font-bold">OFF:</span>
-                            <input type="text" value="${sw.cmdOff}" data-idx="${idx}" class="cfg-sw-cmd-off w-20 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-center font-mono text-cyan-300 uppercase focus:outline-none focus:border-amber-500" placeholder="CMD OFF">
-                        </div>
-                    </div>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        document.getElementById('cfg-btn-dec-sw')?.addEventListener('click', () => {
-            if (switchesList.length > 1) {
-                switchesList.pop();
-                renderSwitchesConfigInputs();
-            }
-        });
-
-        document.getElementById('cfg-btn-inc-sw')?.addEventListener('click', () => {
-            if (switchesList.length < 8) {
-                const nextId = switchesList.length + 1;
-                switchesList.push({
-                    id: nextId,
-                    label: `Switch ${nextId}`,
-                    state: false,
-                    cmdOn: `SW${nextId}_ON`,
-                    cmdOff: `SW${nextId}_OFF`
-                });
-                renderSwitchesConfigInputs();
-            }
-        });
-
-        function saveConfigFromForm() {
-            if (bleProfileSelect) {
-                selectedProfileKey = bleProfileSelect.value;
-                const profile = BLE_PROFILES[selectedProfileKey];
-                if (currentModeLabel) currentModeLabel.innerText = profile.name;
-            }
-
-            customCommands.btnA = document.getElementById('cfg-btn-a').value.trim() || DEFAULT_COMMANDS.btnA;
-            customCommands.btnB = document.getElementById('cfg-btn-b').value.trim() || DEFAULT_COMMANDS.btnB;
-            customCommands.btnX = document.getElementById('cfg-btn-x').value.trim() || DEFAULT_COMMANDS.btnX;
-            customCommands.btnY = document.getElementById('cfg-btn-y').value.trim() || DEFAULT_COMMANDS.btnY;
-            customCommands.btnBack = document.getElementById('cfg-btn-back').value.trim() || DEFAULT_COMMANDS.btnBack;
-            customCommands.btnStart = document.getElementById('cfg-btn-start').value.trim() || DEFAULT_COMMANDS.btnStart;
-            customCommands.joyF = document.getElementById('cfg-joy-f').value.trim() || DEFAULT_COMMANDS.joyF;
-            customCommands.joyB = document.getElementById('cfg-joy-b').value.trim() || DEFAULT_COMMANDS.joyB;
-            customCommands.joyL = document.getElementById('cfg-joy-l').value.trim() || DEFAULT_COMMANDS.joyL;
-            customCommands.joyR = document.getElementById('cfg-joy-r').value.trim() || DEFAULT_COMMANDS.joyR;
-
-            /* Guardar comandos LED */
-            const cfgLedOn = document.getElementById('cfg-led-on')?.value.trim();
-            const cfgLedOff = document.getElementById('cfg-led-off')?.value.trim();
-            if (cfgLedOn) ledCommands.cmdOn = cfgLedOn;
-            if (cfgLedOff) ledCommands.cmdOff = cfgLedOff;
-
-            /* Guardar switches */
-            const container = document.getElementById('cfg-switches-inputs-container');
-            if (container) {
-                const labelInputs = container.querySelectorAll('.cfg-sw-label');
-                const cmdOnInputs = container.querySelectorAll('.cfg-sw-cmd-on');
-                const cmdOffInputs = container.querySelectorAll('.cfg-sw-cmd-off');
-
-                labelInputs.forEach((input, idx) => {
-                    if (switchesList[idx]) {
-                        switchesList[idx].label = input.value.trim() || `Switch ${idx + 1}`;
-                        switchesList[idx].cmdOn = cmdOnInputs[idx]?.value.trim() || `SW${idx + 1}_ON`;
-                        switchesList[idx].cmdOff = cmdOffInputs[idx]?.value.trim() || `SW${idx + 1}_OFF`;
-                    }
-                });
-            }
-
-            updateLedVisuals();
-            renderSwitchesList();
-
-            logToTerminal('<span class="text-emerald-400 font-bold">Configuración guardada correctamente.</span>');
-            closeConfigModal();
-        }
-
-        btnGuide?.addEventListener('click', openConfigModal);
-        btnCloseModal?.addEventListener('click', closeConfigModal);
-        btnSaveConfig?.addEventListener('click', saveConfigFromForm);
-        btnResetDefaults?.addEventListener('click', () => {
-            selectedProfileKey = 'microbit';
-            customCommands = { ...DEFAULT_COMMANDS };
-            ledCommands = { cmdOn: 'LED_ON', cmdOff: 'LED_OFF' };
-            switchesList = [
-                { id: 1, label: 'Switch Principal', state: false, cmdOn: 'SW1_ON', cmdOff: 'SW1_OFF' },
-                { id: 2, label: 'Switch Auxiliar', state: false, cmdOn: 'SW2_ON', cmdOff: 'SW2_OFF' }
-            ];
-            populateConfigForm();
-            updateLedVisuals();
-            renderSwitchesList();
-            logToTerminal('<span class="text-yellow-400">Restablecidos valores por defecto.</span>');
-        });
-        modalBtnConnect?.addEventListener('click', () => {
-            toggleBLEConnection();
-        });
+        btnEnableFullscreen?.addEventListener('click', requestFullscreen);
+        btnFullscreen?.addEventListener('click', requestFullscreen);
 
         function checkOrientation() {
-            const isPortrait = window.innerHeight > window.innerWidth;
-            if (isPortrait) {
+            if (window.innerHeight > window.innerWidth) {
                 portraitWarning?.classList.remove('hidden');
-                portraitWarning?.classList.add('flex');
             } else {
-                portraitWarning?.classList.remove('flex');
                 portraitWarning?.classList.add('hidden');
             }
         }
-
         window.addEventListener('resize', checkOrientation);
-        window.addEventListener('orientationchange', checkOrientation);
         checkOrientation();
 
         function logToTerminal(msg) {
             const time = new Date().toLocaleTimeString('es-ES', { hour12: false });
             const line = document.createElement('div');
             line.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
-            
             if (terminalLog) {
-                terminalLog.appendChild(line.cloneNode(true));
+                terminalLog.appendChild(line);
                 terminalLog.scrollTop = terminalLog.scrollHeight;
-            }
-
-            if (expandedTerminalLog) {
-                expandedTerminalLog.appendChild(line);
-                expandedTerminalLog.scrollTop = expandedTerminalLog.scrollHeight;
             }
         }
 
         async function toggleBLEConnection() {
             if (isConnected) {
-                disconnectBLE();
+                if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
+                isConnected = false;
+                if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+                if (statusText) statusText.innerText = "DESCONECTADO";
+                logToTerminal('<span class="text-rose-400">Desconectado.</span>');
                 return;
             }
 
-            const profile = BLE_PROFILES[selectedProfileKey] || BLE_PROFILES.microbit;
-
+            const profile = BLE_PROFILES[selectedProfileKey];
             try {
-                logToTerminal(`<span class="text-yellow-400">Buscando dispositivo (${profile.name})...</span>`);
-
+                logToTerminal(`Buscando dispositivo ${profile.name}...`);
                 let options = { optionalServices: [profile.serviceUUID] };
-
-                if (profile.filterType === 'namePrefix') {
-                    options.filters = [{ namePrefix: profile.filterValue }];
-                } else if (profile.filterType === 'service') {
-                    options.filters = [{ services: [profile.serviceUUID] }];
-                } else {
-                    options.acceptAllDevices = true;
-                }
+                if (profile.filterType === 'namePrefix') options.filters = [{ namePrefix: profile.filterValue }];
+                else if (profile.filterType === 'service') options.filters = [{ services: [profile.serviceUUID] }];
+                else options.acceptAllDevices = true;
 
                 bleDevice = await navigator.bluetooth.requestDevice(options);
-
-                bleDevice.addEventListener('gattserverdisconnected', onDisconnected);
-
-                logToTerminal(`Conectando a ${bleDevice.name || 'Dispositivo BLE'}...`);
                 gattServer = await bleDevice.gatt.connect();
-
-                logToTerminal('Obteniendo servicio UART...');
                 uartService = await gattServer.getPrimaryService(profile.serviceUUID);
-
-                logToTerminal('Obteniendo característica TX...');
                 txCharacteristic = await uartService.getCharacteristic(profile.txUUID);
 
-                setConnectedState(true);
-                logToTerminal(`<span class="text-emerald-400 font-bold">¡CONECTADO CON ÉXITO A ${bleDevice.name || 'BLE'}!</span>`);
-                sendCommand(customCommands.joyS);
-
-            } catch (error) {
-                console.error('Error BLE:', error);
-                logToTerminal(`<span class="text-rose-400">Error: ${error.message || error}</span>`);
-                setConnectedState(false);
-            }
-        }
-
-        function disconnectBLE() {
-            if (bleDevice && bleDevice.gatt.connected) {
-                bleDevice.gatt.disconnect();
-            }
-            onDisconnected();
-        }
-
-        function onDisconnected() {
-            setConnectedState(false);
-            logToTerminal('<span class="text-rose-400 font-bold">Desconectado del dispositivo Bluetooth.</span>');
-        }
-
-        function setConnectedState(connected) {
-            isConnected = connected;
-            const devName = bleDevice ? bleDevice.name : 'BLE';
-            if (connected) {
-                btnGuide?.classList.add('connected');
+                isConnected = true;
                 if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-                if (statusText) {
-                    statusText.innerText = `CONECTADO (${devName})`;
-                    statusText.classList.add('text-emerald-400');
-                }
-
-                if (modalStatusDot) modalStatusDot.className = "w-3 h-3 rounded-full bg-emerald-500 animate-pulse";
-                if (modalStatusText) {
-                    modalStatusText.innerText = `ESTADO: CONECTADO (${devName})`;
-                    modalStatusText.className = "text-xs font-semibold terminal-font text-emerald-400";
-                }
-                if (modalConnectLabel) modalConnectLabel.innerText = "DESCONECTAR BLE";
-            } else {
-                btnGuide?.classList.remove('connected');
-                if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
-                if (statusText) {
-                    statusText.innerText = "DESCONECTADO";
-                    statusText.classList.remove('text-emerald-400');
-                }
-
-                if (modalStatusDot) modalStatusDot.className = "w-3 h-3 rounded-full bg-rose-500";
-                if (modalStatusText) {
-                    modalStatusText.innerText = "ESTADO: DESCONECTADO";
-                    modalStatusText.className = "text-xs font-semibold terminal-font text-slate-400";
-                }
-                if (modalConnectLabel) modalConnectLabel.innerText = "CONECTAR BLE";
+                if (statusText) statusText.innerText = `CONECTADO (${bleDevice.name})`;
+                logToTerminal(`<span class="text-emerald-400 font-bold">¡Conectado exitosamente!</span>`);
+            } catch (err) {
+                logToTerminal(`<span class="text-rose-400">Error: ${err.message}</span>`);
             }
         }
+
+        btnGuide?.addEventListener('click', toggleBLEConnection);
 
         async function sendCommand(cmd) {
             if (telemetryCmd) telemetryCmd.innerHTML = `CMD: <strong class="text-cyan-400">${cmd}</strong>`;
-            
-            const now = Date.now();
-            if (lastCommand === cmd && cmd !== customCommands.joyS) return;
-            if (now - lastSendTime < MIN_TX_INTERVAL_MS && cmd !== customCommands.joyS) return;
-
-            lastCommand = cmd;
-            lastSendTime = now;
-
-            logToTerminal(`TX -> <span class="text-cyan-300 font-bold">${cmd}</span>`);
-
-            if (!isConnected || !txCharacteristic) {
-                return;
-            }
-
+            if (!isConnected || !txCharacteristic) return;
             try {
                 const encoder = new TextEncoder();
-                const data = encoder.encode(cmd + '\n');
-                await txCharacteristic.writeValue(data);
+                await txCharacteristic.writeValue(encoder.encode(cmd + '\n'));
+                logToTerminal(`TX -> ${cmd}`);
             } catch (err) {
-                console.error('Error enviando comando:', err);
-                logToTerminal(`<span class="text-rose-400">Error TX: ${err.message}</span>`);
+                console.error(err);
             }
         }
 
-        const joystickArea = document.getElementById('joystick-area');
-        const joystickCap = document.getElementById('joystick-cap');
-        let isDragging = false;
-        let joyCenterX = 0;
-        let joyCenterY = 0;
-        const maxRadius = 48;
+        // Action Buttons Setup
+        document.querySelectorAll('.abxy-btn, #btn-back, #btn-start').forEach(btn => {
+            const cmd = btn.getAttribute('data-cmd') || 'S';
+            btn.addEventListener('mousedown', () => sendCommand(cmd));
+            btn.addEventListener('mouseup', () => sendCommand('S'));
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand(cmd); });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('S'); });
+        });
 
-        function handleJoystickMove(clientX, clientY) {
-            if (!isDragging) return;
-
-            const deltaX = clientX - joyCenterX;
-            const deltaY = clientY - joyCenterY;
-            const distance = Math.hypot(deltaX, deltaY);
-
-            let clampedX = deltaX;
-            let clampedY = deltaY;
-
-            if (distance > maxRadius) {
-                clampedX = (deltaX / distance) * maxRadius;
-                clampedY = (deltaY / distance) * maxRadius;
-            }
-
-            if (joystickCap) joystickCap.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
-
-            const angle = Math.atan2(-clampedY, clampedX) * (180 / Math.PI);
-            
-            if (distance < 14) {
-                sendCommand(customCommands.joyS);
-            } else if (angle >= 45 && angle < 135) {
-                sendCommand(customCommands.joyF);
-            } else if (angle >= -135 && angle < -45) {
-                sendCommand(customCommands.joyB);
-            } else if (angle >= 135 || angle < -135) {
-                sendCommand(customCommands.joyL);
-            } else if (angle >= -45 && angle < 45) {
-                sendCommand(customCommands.joyR);
-            }
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado correctamente:', reg.scope))
+                    .catch(err => console.warn('Error al registrar Service Worker:', err));
+            });
         }
-
-        function startJoystick(e) {
-            if (!joystickArea) return;
-            isDragging = true;
-            const rect = joystickArea.getBoundingClientRect();
-            joyCenterX = rect.left + rect.width / 2;
-            joyCenterY = rect.top + rect.height / 2;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            handleJoystickMove(clientX, clientY);
-        }
-
-        function stopJoystick() {
-            if (!isDragging) return;
-            isDragging = false;
-            if (joystickCap) joystickCap.style.transform = `translate(0px, 0px)`;
-            sendCommand(customCommands.joyS);
-        }
-
-        joystickArea?.addEventListener('mousedown', startJoystick);
-        window.addEventListener('mousemove', (e) => handleJoystickMove(e.clientX, e.clientY));
-        window.addEventListener('mouseup', stopJoystick);
-
-        joystickArea?.addEventListener('touchstart', startJoystick);
-        window.addEventListener('touchmove', (e) => {
-            if (isDragging && e.touches.length > 0) {
-                handleJoystickMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        });
-        window.addEventListener('touchend', stopJoystick);
-
-        const buttonElementMap = {
-            'btn-a': () => customCommands.btnA,
-            'btn-b': () => customCommands.btnB,
-            'btn-x': () => customCommands.btnX,
-            'btn-y': () => customCommands.btnY,
-            'btn-back': () => customCommands.btnBack,
-            'btn-start': () => customCommands.btnStart
-        };
-
-        const buttons = document.querySelectorAll('.abxy-btn, #btn-back, #btn-start');
-
-        buttons.forEach(btn => {
-            const getCmd = buttonElementMap[btn.id] || (() => btn.getAttribute('data-cmd') || 'S');
-
-            const handlePress = (e) => {
-                e.preventDefault();
-                btn.classList.add('pressed');
-                sendCommand(getCmd());
-            };
-
-            const handleRelease = (e) => {
-                e.preventDefault();
-                btn.classList.remove('pressed');
-                sendCommand(customCommands.joyS);
-            };
-
-            btn.addEventListener('mousedown', handlePress);
-            btn.addEventListener('mouseup', handleRelease);
-            btn.addEventListener('touchstart', handlePress);
-            btn.addEventListener('touchend', handleRelease);
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.repeat) return;
-            const key = e.key.toLowerCase();
-            if (key === 'w' || key === 'arrowup') sendCommand(customCommands.joyF);
-            if (key === 's' || key === 'arrowdown') sendCommand(customCommands.joyB);
-            if (key === 'a' || key === 'arrowleft') sendCommand(customCommands.joyL);
-            if (key === 'd' || key === 'arrowright') sendCommand(customCommands.joyR);
-            if (key === 'j') sendCommand(customCommands.btnA);
-            if (key === 'k') sendCommand(customCommands.btnB);
-            if (key === 'u') sendCommand(customCommands.btnX);
-            if (key === 'i') sendCommand(customCommands.btnY);
-        });
-
-        window.addEventListener('keyup', (e) => {
-            const key = e.key.toLowerCase();
-            if (['w', 's', 'a', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'j', 'k', 'u', 'i'].includes(key)) {
-                sendCommand(customCommands.joyS);
-            }
-        });
     </script>
 </body>
 </html>
