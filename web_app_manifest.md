@@ -1,0 +1,25 @@
+{
+  "name": "Xbox 360 micro:bit Controller",
+  "short_name": "Xbox BLE",
+  "description": "Controlador estilo Xbox 360 con Web Bluetooth para micro:bit y Arduino Robot Sumo",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#090a0c",
+  "theme_color": "#090a0c",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/588/588258.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/588/588258.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
