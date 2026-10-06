@@ -468,9 +468,24 @@
 
     <script>
         const BLE_PROFILES = {
-            microbit: { name: 'micro:bit (ar1)', serviceUUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', txUUID: '6e400002-b5a3-f393-e0a9-e50e24dcca9e', filterType: 'namePrefix', filterValue: 'ar1' },
-            hm10: { name: 'Arduino (HM-10)', serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb', txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb', filterType: 'service', filterValue: '0000ffe0-0000-1000-8000-00805f9b34fb' },
-            generic: { name: 'Dispositivo Genérico BLE', serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb', txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb', filterType: 'acceptAll', filterValue: null }
+            microbit: { 
+                name: 'micro:bit (NUS UART)', 
+                serviceUUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', 
+                txUUID: '6e400003-b5a3-f393-e0a9-e50e24dcca9e', // Correct RX/Write Characteristic for micro:bit
+                filterType: 'microbit' 
+            },
+            hm10: { 
+                name: 'Arduino (HM-10 / HC-08)', 
+                serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb', 
+                txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb', 
+                filterType: 'service' 
+            },
+            generic: { 
+                name: 'Dispositivo Genérico BLE', 
+                serviceUUID: '0000ffe0-0000-1000-8000-00805f9b34fb', 
+                txUUID: '0000ffe1-0000-1000-8000-00805f9b34fb', 
+                filterType: 'acceptAll' 
+            }
         };
 
         let selectedProfileKey = 'microbit';
@@ -534,34 +549,85 @@
             }
         }
 
+        function onDisconnected() {
+            isConnected = false;
+            txCharacteristic = null;
+            gattServer = null;
+            if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+            if (statusText) statusText.innerText = "DESCONECTADO";
+            if (btnGuide) btnGuide.classList.remove('connected');
+            logToTerminal('<span class="text-rose-400">Bluetooth desconectado.</span>');
+        }
+
         async function toggleBLEConnection() {
             if (isConnected) {
-                if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
-                isConnected = false;
-                if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
-                if (statusText) statusText.innerText = "DESCONECTADO";
-                logToTerminal('<span class="text-rose-400">Desconectado.</span>');
+                if (bleDevice && bleDevice.gatt.connected) {
+                    bleDevice.gatt.disconnect();
+                }
+                onDisconnected();
                 return;
             }
 
             const profile = BLE_PROFILES[selectedProfileKey];
             try {
-                logToTerminal(`Buscando dispositivo ${profile.name}...`);
-                let options = { optionalServices: [profile.serviceUUID] };
-                if (profile.filterType === 'namePrefix') options.filters = [{ namePrefix: profile.filterValue }];
-                else if (profile.filterType === 'service') options.filters = [{ services: [profile.serviceUUID] }];
-                else options.acceptAllDevices = true;
+                logToTerminal(`Buscando dispositivo (${profile.name})...`);
+                
+                // Comprehensive scan options supporting micro:bit (all names) & generic BLE UARTs
+                let options = {
+                    optionalServices: [
+                        '6e400001-b5a3-f393-e0a9-e50e24dcca9e', // micro:bit NUS
+                        '0000ffe0-0000-1000-8000-00805f9b34fb', // HM-10 / HC-08
+                        '00001801-0000-1000-8000-00805f9b34fb'
+                    ]
+                };
+
+                if (profile.filterType === 'microbit') {
+                    options.filters = [
+                        { namePrefix: 'BBC micro:bit' },
+                        { namePrefix: 'micro:bit' },
+                        { namePrefix: 'ar1' },
+                        { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
+                    ];
+                } else if (profile.filterType === 'service') {
+                    options.filters = [{ services: [profile.serviceUUID] }];
+                } else {
+                    options.acceptAllDevices = true;
+                }
 
                 bleDevice = await navigator.bluetooth.requestDevice(options);
+                bleDevice.addEventListener('gattserverdisconnected', onDisconnected);
+
+                logToTerminal(`Conectando a GATT Server (${bleDevice.name || 'micro:bit'})...`);
                 gattServer = await bleDevice.gatt.connect();
-                uartService = await gattServer.getPrimaryService(profile.serviceUUID);
-                txCharacteristic = await uartService.getCharacteristic(profile.txUUID);
+
+                // Find primary service dynamically
+                try {
+                    uartService = await gattServer.getPrimaryService(profile.serviceUUID);
+                } catch (e) {
+                    // Fallback to searching all available services
+                    const services = await gattServer.getPrimaryServices();
+                    if (services.length > 0) uartService = services[0];
+                    else throw e;
+                }
+
+                // Find write characteristic dynamically
+                try {
+                    txCharacteristic = await uartService.getCharacteristic(profile.txUUID);
+                } catch (e) {
+                    logToTerminal('<span class="text-amber-400">Buscando característica de escritura...</span>');
+                    const characteristics = await uartService.getCharacteristics();
+                    txCharacteristic = characteristics.find(c => c.properties.write || c.properties.writeWithoutResponse);
+                    if (!txCharacteristic) throw new Error("No se encontró característica de escritura BLE.");
+                }
 
                 isConnected = true;
                 if (statusDot) statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-                if (statusText) statusText.innerText = `CONECTADO (${bleDevice.name})`;
-                logToTerminal(`<span class="text-emerald-400 font-bold">¡Conectado exitosamente!</span>`);
+                if (statusText) statusText.innerText = `CONECTADO (${bleDevice.name || 'micro:bit'})`;
+                if (btnGuide) btnGuide.classList.add('connected');
+                logToTerminal(`<span class="text-emerald-400 font-bold">¡Conectado exitosamente con ${bleDevice.name || 'micro:bit'}!</span>`);
             } catch (err) {
+                console.error(err);
+                onDisconnected();
                 logToTerminal(`<span class="text-rose-400">Error: ${err.message}</span>`);
             }
         }
@@ -571,12 +637,24 @@
         async function sendCommand(cmd) {
             if (telemetryCmd) telemetryCmd.innerHTML = `CMD: <strong class="text-cyan-400">${cmd}</strong>`;
             if (!isConnected || !txCharacteristic) return;
+            
+            const now = Date.now();
+            if (now - lastSendTime < MIN_TX_INTERVAL_MS && cmd === lastCommand) return;
+            lastSendTime = now;
+            lastCommand = cmd;
+
             try {
                 const encoder = new TextEncoder();
-                await txCharacteristic.writeValue(encoder.encode(cmd + '\n'));
+                const data = encoder.encode(cmd + '\n');
+                
+                if (txCharacteristic.properties.writeWithoutResponse) {
+                    await txCharacteristic.writeValueWithoutResponse(data);
+                } else {
+                    await txCharacteristic.writeValue(data);
+                }
                 logToTerminal(`TX -> ${cmd}`);
             } catch (err) {
-                console.error(err);
+                console.error("TX Error:", err);
             }
         }
 
